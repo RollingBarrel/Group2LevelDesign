@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -20,6 +21,9 @@ namespace StarterAssets
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
+
+        [Tooltip("Sprint speed of the character in m/s")]
+        public float DashSpeed = 5.0f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -45,6 +49,9 @@ namespace StarterAssets
 
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
         public float FallTimeout = 0.15f;
+
+        [Tooltip("Time required to pass before entering the dash state")]
+        public float DashTimeout = 0.15f;
 
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
@@ -90,6 +97,7 @@ namespace StarterAssets
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
+        private float _dashTimeoutDelta;
 
         // animation IDs
         private int _animIDSpeed;
@@ -150,12 +158,17 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            _dashTimeoutDelta = DashTimeout;
         }
 
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
-
+            
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                StartCoroutine(Dash());
+            }
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -346,6 +359,17 @@ namespace StarterAssets
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+        }
+
+        private IEnumerator Dash()
+        {
+            float startTime = Time.time;
+			Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+			while(Time.time < startTime + _dashTimeoutDelta)
+			{
+				_controller.Move(targetDirection * DashSpeed * Time.deltaTime);
+				yield return null;
+			}
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
