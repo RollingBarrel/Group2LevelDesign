@@ -165,6 +165,7 @@ namespace StarterAssets
         private void LateUpdate()
         {
             CameraRotation();
+            _controller.enabled = true;
         }
 
         private void AssignAnimationIDs()

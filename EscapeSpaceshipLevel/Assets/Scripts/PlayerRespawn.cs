@@ -22,29 +22,24 @@ public class PlayerRespawn : MonoBehaviour
             {
                 gameObject.GetComponent<CharacterController>().enabled = false;
                 transform.position = new Vector3(pos3.position.x, pos3.position.y, pos3.position.z);
-                gameObject.GetComponent<CharacterController>().enabled = true;
                 Debug.Log(transform.position);
             }
             else if(secondCheckpoint)
             {
-
                 gameObject.GetComponent<CharacterController>().enabled = false;
                 transform.position = new Vector3(pos2.position.x, pos2.position.y, pos2.position.z);
-                gameObject.GetComponent<CharacterController>().enabled = true;
                 Debug.Log(transform.position);
             }
             else if (firstCheckpoint)
             {
                 gameObject.GetComponent<CharacterController>().enabled = false;
                 transform.position = new Vector3(pos1.position.x, pos1.position.y, pos1.position.z);
-                gameObject.GetComponent<CharacterController>().enabled = true;
                 Debug.Log(transform.position);
             }
             else
             {
                 gameObject.GetComponent<CharacterController>().enabled = false;
                 transform.position = new Vector3(pos0.position.x, pos0.position.y, pos0.position.z);
-                gameObject.GetComponent<CharacterController>().enabled = true;
                 Debug.Log(transform.position);
             }
         }
